@@ -6,6 +6,8 @@
  * Finds the minimum index in a sorted array, `arr`, at which the `target`
  * could be inserted while still preserving sorted order.
  *
+ * `lt` is equal to `(a, b) => a < b` by default
+ *
  * @template T
  * @param {T[]} arr a sorted array
  * @param {T} target the target to search for

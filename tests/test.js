@@ -1,6 +1,6 @@
 import {assertEquals} from "jsr:@std/assert@1";
 import fc from "npm:fast-check";
-import {bisect} from "@alg/bisect";
+import {bisect, bisectRight} from "@alg/bisect";
 
 Deno.test({
     name: "bisect finds the minimum element in an array",
@@ -9,6 +9,7 @@ Deno.test({
         (arr) => {
             arr.sort((a, b) => a < b ? -1 : 1);
             assertEquals(bisect(arr, arr[0]), 0);
+            assertEquals(bisectRight(arr, arr[0]), 1);
         },
     )),
 });
@@ -17,7 +18,10 @@ Deno.test({
     name: "bisect returns 0 for empty arrays with any target",
     fn: () => fc.assert(fc.property(
         fc.integer(),
-        (target) => assertEquals(bisect([], target), 0),
+        (target) => {
+            assertEquals(bisect([], target), 0);
+            assertEquals(bisectRight([], target), 0);
+        },
     )),
 });
 
@@ -28,6 +32,7 @@ Deno.test({
         (arr) => {
             arr.sort((a, b) => a < b ? -1 : 1);
             assertEquals(bisect(arr, arr[0] - 1), 0);
+            assertEquals(bisectRight(arr, arr[0] - 1), 0);
         },
     )),
 });
@@ -39,6 +44,7 @@ Deno.test({
         (arr) => {
             arr.sort((a, b) => a < b ? -1 : 1);
             const max = arr.at(-1);
+            assertEquals(bisectRight(arr, arr.at(-1)), arr.length);
             fc.pre(arr.at(-2) !== max);
             assertEquals(bisect(arr, arr.at(-1)), arr.length - 1);
         },
@@ -52,13 +58,14 @@ Deno.test({
         (arr) => {
             arr.sort((a, b) => a < b ? -1 : 1);
             assertEquals(bisect(arr, arr.at(-1) + 1), arr.length);
+            assertEquals(bisectRight(arr, arr.at(-1) + 1), arr.length);
         },
     )),
 });
 
 
 Deno.test({
-    name: "bisect finds the leftmost occurrence of an item",
+    name: "bisect finds the leftmost or rightmost occurrence of an item",
     fn: () => fc.assert(fc.property(
         fc.array(fc.integer({min: -50, max: 50}), {minLength: 1}),
         fc.integer({min: -50, max: 50}),
@@ -66,8 +73,11 @@ Deno.test({
         (arr, target, reps) => {
             arr = arr.concat(new Array(reps).fill(target));
             arr.sort((a, b) => a < b ? -1 : 1);
-            const expected = arr.findIndex((e) => e === target);
-            assertEquals(bisect(arr, target), expected);
+            const expectedLeft = arr.findIndex((e) => e === target);
+            assertEquals(bisect(arr, target), expectedLeft);
+            let expectedRight = arr.findIndex((e) => e > target);
+            expectedRight = expectedRight === -1 ? arr.length : expectedRight;
+            assertEquals(bisectRight(arr, target), expectedRight);
         },
     )),
 });
@@ -84,12 +94,13 @@ Deno.test({
             fc.pre(arr.at(0) < target && target < arr.at(-1));
             const expected = arr.findIndex((e) => e > target);
             assertEquals(bisect(arr, target), expected);
+            assertEquals(bisectRight(arr, target), expected);
         },
     )),
 });
 
 Deno.test({
-    name: "bisect finds the leftmost index with repeated values",
+    name: "bisect finds the leftmost or rightmost index with repeated values",
     fn: () => fc.assert(fc.property(
         fc.array(fc.integer({min: -50, max: 50}), {minLength: 1}),
         fc.integer({min: -50, max: 50}),
@@ -97,8 +108,11 @@ Deno.test({
         (arr, target, reps) => {
             arr = arr.concat(Array(reps).fill(target));
             arr.sort((a, b) => a < b ? -1 : 1);
-            const expected = arr.findIndex((e) => e === target);
-            assertEquals(bisect(arr, target), expected);
+            const expectedLeft = arr.findIndex((e) => e === target);
+            assertEquals(bisect(arr, target), expectedLeft);
+            let expectedRight = arr.findIndex((e) => e > target);
+            expectedRight = expectedRight === -1 ? arr.length : expectedRight;
+            assertEquals(bisectRight(arr, target), expectedRight);
         },
     )),
-})
+});

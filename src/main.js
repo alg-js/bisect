@@ -13,3 +13,17 @@ export function bisect(arr, target, lt = (a, b) => a < b) {
     }
     return lo;
 }
+
+export function bisectRight(arr, target, lt = (a, b) => a < b) {
+    let lo = 0;
+    let hi = arr.length;
+    while (lo < hi) {
+        const mid = Math.floor(lo + (hi - lo) / 2);
+        if (lt(target, arr[mid])) {
+            hi = mid;
+        } else {
+            lo = mid + 1;
+        }
+    }
+    return lo;
+}

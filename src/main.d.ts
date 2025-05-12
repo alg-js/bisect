@@ -15,7 +15,7 @@
  * @returns {number} the minimum index `target` can be inserted to preserve
  *  the sorted order of `arr` — may be equal to `arr.length`
  */
-export function bisect<T>(
+export function bisectLeft<T>(
     arr: T[],
     target: T,
     lt: (a: T, b: T) => boolean,
@@ -34,7 +34,7 @@ export function bisect<T>(
  * @returns {number} the minimum index `target` can be inserted to preserve
  *  the sorted order of `arr` — may be equal to `arr.length`
  */
-export function bisectRight<T>(
+export function bisect<T>(
     arr: T[],
     target: T,
     lt: (a: T, b: T) => boolean,

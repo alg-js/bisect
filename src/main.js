@@ -1,6 +1,6 @@
 /* @ts-self-types="./main.d.ts" */
 
-export function bisect(arr, target, lt = (a, b) => a < b) {
+export function bisectLeft(arr, target, lt = (a, b) => a < b) {
     let lo = 0;
     let hi = arr.length - 1;
     while (lo <= hi) {
@@ -14,7 +14,7 @@ export function bisect(arr, target, lt = (a, b) => a < b) {
     return lo;
 }
 
-export function bisectRight(arr, target, lt = (a, b) => a < b) {
+export function bisect(arr, target, lt = (a, b) => a < b) {
     let lo = 0;
     let hi = arr.length;
     while (lo < hi) {

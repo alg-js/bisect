@@ -1,6 +1,6 @@
 import {assertEquals} from "jsr:@std/assert@1";
 import fc from "npm:fast-check";
-import {bisect, bisectRight} from "@alg/bisect";
+import {bisectLeft, bisect} from "@alg/bisect";
 
 Deno.test({
     name: "bisect finds the minimum element in an array",
@@ -8,8 +8,8 @@ Deno.test({
         fc.array(fc.integer(), {minLength: 1}),
         (arr) => {
             arr.sort((a, b) => a < b ? -1 : 1);
-            assertEquals(bisect(arr, arr[0]), 0);
-            assertEquals(bisectRight(arr, arr[0]), 1);
+            assertEquals(bisectLeft(arr, arr[0]), 0);
+            assertEquals(bisect(arr, arr[0]), 1);
         },
     )),
 });
@@ -19,8 +19,8 @@ Deno.test({
     fn: () => fc.assert(fc.property(
         fc.integer(),
         (target) => {
+            assertEquals(bisectLeft([], target), 0);
             assertEquals(bisect([], target), 0);
-            assertEquals(bisectRight([], target), 0);
         },
     )),
 });
@@ -31,8 +31,8 @@ Deno.test({
         fc.array(fc.integer(), {minLength: 1}),
         (arr) => {
             arr.sort((a, b) => a < b ? -1 : 1);
+            assertEquals(bisectLeft(arr, arr[0] - 1), 0);
             assertEquals(bisect(arr, arr[0] - 1), 0);
-            assertEquals(bisectRight(arr, arr[0] - 1), 0);
         },
     )),
 });
@@ -44,9 +44,9 @@ Deno.test({
         (arr) => {
             arr.sort((a, b) => a < b ? -1 : 1);
             const max = arr.at(-1);
-            assertEquals(bisectRight(arr, arr.at(-1)), arr.length);
+            assertEquals(bisect(arr, arr.at(-1)), arr.length);
             fc.pre(arr.at(-2) !== max);
-            assertEquals(bisect(arr, arr.at(-1)), arr.length - 1);
+            assertEquals(bisectLeft(arr, arr.at(-1)), arr.length - 1);
         },
     )),
 });
@@ -57,8 +57,8 @@ Deno.test({
         fc.array(fc.integer({min: -50, max: 50}), {minLength: 1}),
         (arr) => {
             arr.sort((a, b) => a < b ? -1 : 1);
+            assertEquals(bisectLeft(arr, arr.at(-1) + 1), arr.length);
             assertEquals(bisect(arr, arr.at(-1) + 1), arr.length);
-            assertEquals(bisectRight(arr, arr.at(-1) + 1), arr.length);
         },
     )),
 });
@@ -74,10 +74,10 @@ Deno.test({
             arr = arr.concat(new Array(reps).fill(target));
             arr.sort((a, b) => a < b ? -1 : 1);
             const expectedLeft = arr.findIndex((e) => e === target);
-            assertEquals(bisect(arr, target), expectedLeft);
+            assertEquals(bisectLeft(arr, target), expectedLeft);
             let expectedRight = arr.findIndex((e) => e > target);
             expectedRight = expectedRight === -1 ? arr.length : expectedRight;
-            assertEquals(bisectRight(arr, target), expectedRight);
+            assertEquals(bisect(arr, target), expectedRight);
         },
     )),
 });
@@ -93,8 +93,8 @@ Deno.test({
             arr.sort((a, b) => a < b ? -1 : 1);
             fc.pre(arr.at(0) < target && target < arr.at(-1));
             const expected = arr.findIndex((e) => e > target);
+            assertEquals(bisectLeft(arr, target), expected);
             assertEquals(bisect(arr, target), expected);
-            assertEquals(bisectRight(arr, target), expected);
         },
     )),
 });
@@ -109,10 +109,10 @@ Deno.test({
             arr = arr.concat(Array(reps).fill(target));
             arr.sort((a, b) => a < b ? -1 : 1);
             const expectedLeft = arr.findIndex((e) => e === target);
-            assertEquals(bisect(arr, target), expectedLeft);
+            assertEquals(bisectLeft(arr, target), expectedLeft);
             let expectedRight = arr.findIndex((e) => e > target);
             expectedRight = expectedRight === -1 ? arr.length : expectedRight;
-            assertEquals(bisectRight(arr, target), expectedRight);
+            assertEquals(bisect(arr, target), expectedRight);
         },
     )),
 });

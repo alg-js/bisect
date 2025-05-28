@@ -1,7 +1,7 @@
 {
   "name": "@alg/bisect",
-  "version": "0.0.5",
-  "license": "MIT",
+  "version": "0.0.6",
+  "license": "Apache-2.0",
   "exports": "./src/main.js",
   "lock": false,
   "publish": {
@@ -9,9 +9,6 @@
       "LICENSE",
       "README.md",
       "src/**"
-    ],
-    "exclude": [
-      "tests/**"
     ]
   }
 }

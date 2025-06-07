@@ -19,6 +19,14 @@
  *
  * `lt` is equal to `(a, b) => a < b` by default
  *
+ * @example
+ * ```javascript
+ * import {bisectLeft} from "@alg/bisect";
+ *
+ * const data = [1, 2, 3, 3, 4, 5];
+ * console.log(bisectLeft(data, 3));  // 2
+ * ```
+ *
  * @template T
  * @param {T[]} arr a sorted array
  * @param {T} target the target to search for
@@ -38,6 +46,14 @@ export function bisectLeft<T>(
  *
  * `lt` is equal to `(a, b) => a < b` by default
  *
+ * @example
+ * ```javascript
+ * import {bisect} from "@alg/bisect";
+ *
+ * const data = [1, 2, 3, 3, 4, 5];
+ * console.log(bisect(data, 3));  // 4
+ * ```
+ *
  * @template T
  * @param {T[]} arr a sorted array
  * @param {T} target the target to search for
@@ -50,3 +66,59 @@ export function bisect<T>(
     target: T,
     lt: (a: T, b: T) => boolean,
 ): number;
+
+/**
+ * Splits the given array into two. Where all the elements in the first array
+ * are less than or equal to the given target, and all elements in the second
+ * array are strictly greater than the target.
+ *
+ * A comparison function, `lt`, can be provided and is equal to
+ * `(a, b) => a < b` by default.
+ *
+ * @exmaple
+ * ```javascript
+ * import {partition} from "@alg/bisect";
+ *
+ * const data = [1, 2, 3, 3, 4, 5];
+ * console.log(partition(data, 3));  // [[1, 2, 3, 3], [4, 5]]
+ * ```
+ *
+ * @template T
+ * @param {T[]} arr a sorted array
+ * @param {T} target the target to split the given array at
+ * @param {(a: T, b: T) => boolean} lt a function defining the `<` relation
+ * @returns {[T[], T[]]} Two arrays that divide the given array at the target
+ */
+export function partition<T>(
+    arr: T[],
+    target: T,
+    lt: (a: T, b: T) => boolean,
+): [T[], T[]];
+
+/**
+ * Splits the given array into two. Where all the elements in the first array
+ * are strictly less than the given target, and all elements in the second
+ * array are greater than or equal to the target.
+ *
+ * A comparison function, `lt`, can be provided and is equal to
+ * `(a, b) => a < b` by default.
+ *
+ * @exmaple
+ * ```javascript
+ * import {partitionLeft} from "@alg/bisect";
+ *
+ * const data = [1, 2, 3, 3, 4, 5];
+ * console.log(partitionLeft(data, 3));  // [[1, 2], [3, 3, 4, 5]]
+ * ```
+ *
+ * @template T
+ * @param {T[]} arr a sorted array
+ * @param {T} target the target to split the given array at
+ * @param {(a: T, b: T) => boolean} lt a function defining the `<` relation
+ * @returns {[T[], T[]]} Two arrays that divide the given array at the target
+ */
+export function partitionLeft<T>(
+    arr: T[],
+    target: T,
+    lt: (a: T, b: T) => boolean,
+): [T[], T[]];

@@ -42,3 +42,13 @@ export function bisect(arr, target, lt = (a, b) => a < b) {
     }
     return lo;
 }
+
+export function partition(arr, target, lt = (a, b) => a < b) {
+    const idx = bisect(arr, target, lt);
+    return [arr.slice(0, idx), arr.slice(idx)];
+}
+
+export function partitionLeft(arr, target, lt = (a, b) => a < b) {
+    const idx = bisectLeft(arr, target, lt);
+    return [arr.slice(0, idx), arr.slice(idx)];
+}

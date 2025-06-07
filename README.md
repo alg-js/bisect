@@ -11,7 +11,35 @@ A generic binary search implementation.
 deno add jsr:@alg/bisect
 ```
 
+<details>
+<summary>Other Install Options</summary>
+
+```bash
+npx jsr add @alg/bisect
+```
+
+```bash
+bunx jsr add @alg/bisect
+```
+
+```bash
+pnpm i jsr:@alg/bisect
+```
+
+```bash
+yarn add jsr:@alg/bisect
+```
+
+```bash
+vlt install jsr:@alg/bisect
+```
+
+</details>
+
 ## Example
+
+The `bisect` and `bisectLeft` functions find target values in an array, the
+`partition` and `partitionLeft` functions split an array by a target value.
 
 `bisect` returns the largest index in a sorted array at which the target value
 can be inserted while preserving sorted order.
@@ -50,3 +78,22 @@ const arr = [-1, 2, 2, 4, 5];
 console.log(bisect(arr, 2));  // 3
 console.log(bisectLeft(arr, 2));  // 1
 ```
+
+`partition` splits a given array into two. Where all the elements in the first
+array are less than or equals to the given target, and all elements in the
+second array are strictly greater than or equal to the target.
+
+`partitionLeft` splits the given array into two. Where all the elements in the
+first array are strictly less than the given target, and all elements in the
+second array are greater than or equal to the target.
+
+```javascript
+import {partition, partitionLeft} from "@alg/bisect";
+
+const data = [1, 2, 3, 3, 4, 5];
+console.log(partition(data, 3));  // [[1, 2, 3, 3], [4, 5]]
+console.log(partitionLeft(data, 3));  // [[1, 2], [3, 3, 4, 5]];
+```
+
+As with `bisect` and `bisectLeft`, a custom comparison operator can be passed
+as an optional third argument.

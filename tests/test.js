@@ -15,7 +15,7 @@
 
 import {assertEquals} from "jsr:@std/assert@1";
 import fc from "npm:fast-check";
-import {bisectLeft, bisect} from "@alg/bisect";
+import {bisect, bisectLeft, partition, partitionLeft} from "../src/main.js";
 
 Deno.test({
     name: "bisect finds the minimum element in an array",
@@ -128,6 +128,43 @@ Deno.test({
             let expectedRight = arr.findIndex((e) => e > target);
             expectedRight = expectedRight === -1 ? arr.length : expectedRight;
             assertEquals(bisect(arr, target), expectedRight);
+        },
+    )),
+});
+
+
+Deno.test({
+    name: "Partition splits a list in two with all elements <= x on the left",
+    fn: () => fc.assert(fc.property(
+        fc.array(fc.integer(), {minLength: 1}),
+        fc.integer(),
+        (arr, value) => {
+            arr.sort((a, b) => a < b ? -1 : 1);
+            const idx = arr.findLastIndex(it => it <= value) + 1;
+            const [bruteLeft, bruteRight] = [arr.slice(0, idx), arr.slice(idx)];
+            const [left, right] = partition(arr, value);
+
+            assertEquals(left, bruteLeft);
+            assertEquals(right, bruteRight);
+        },
+    )),
+});
+
+
+Deno.test({
+    name: "Partition Left splits a list in two with elements < x on the left",
+    fn: () => fc.assert(fc.property(
+        fc.array(fc.integer(), {minLength: 1}),
+        fc.integer(),
+        (arr, value) => {
+            arr.sort((a, b) => a < b ? -1 : 1);
+            let idx = arr.findIndex(it => it >= value);
+            idx = idx === -1 ? arr.length : idx;
+            const [bruteLeft, bruteRight] = [arr.slice(0, idx), arr.slice(idx)];
+            const [left, right] = partitionLeft(arr, value);
+
+            assertEquals(left, bruteLeft);
+            assertEquals(right, bruteRight);
         },
     )),
 });

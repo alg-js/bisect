@@ -30,14 +30,16 @@
  * @template T
  * @param {T[]} arr a sorted array
  * @param {T} target the target to search for
- * @param {(a: T, b: T) => boolean} lt a function defining the `<` relation
+ * @param {Object=} options
+ * @param {(a: T, b: T) => boolean} options.lt a function defining the `<`
+ * relation
  * @returns {number} the minimum index `target` can be inserted to preserve
  *  the sorted order of `arr` — may be equal to `arr.length`
  */
 export function bisectLeft<T>(
     arr: T[],
     target: T,
-    lt: (a: T, b: T) => boolean,
+    options?: {lt?: (a: T, b: T) => boolean},
 ): number;
 
 /**
@@ -57,14 +59,16 @@ export function bisectLeft<T>(
  * @template T
  * @param {T[]} arr a sorted array
  * @param {T} target the target to search for
- * @param {(a: T, b: T) => boolean} lt a function defining the `<` relation
+ * @param {Object=} options
+ * @param {(a: T, b: T) => boolean} options.lt a function defining the `<`
+ * relation
  * @returns {number} the minimum index `target` can be inserted to preserve
  *  the sorted order of `arr` — may be equal to `arr.length`
  */
 export function bisect<T>(
     arr: T[],
     target: T,
-    lt: (a: T, b: T) => boolean,
+    options?: {lt?: (a: T, b: T) => boolean},
 ): number;
 
 /**
@@ -86,13 +90,15 @@ export function bisect<T>(
  * @template T
  * @param {T[]} arr a sorted array
  * @param {T} target the target to split the given array at
- * @param {(a: T, b: T) => boolean} lt a function defining the `<` relation
+ * @param {Object=} options
+ * @param {(a: T, b: T) => boolean} options.lt a function defining the `<`
+ * relation
  * @returns {[T[], T[]]} Two arrays that divide the given array at the target
  */
 export function partition<T>(
     arr: T[],
     target: T,
-    lt: (a: T, b: T) => boolean,
+    options?: {lt?: (a: T, b: T) => boolean},
 ): [T[], T[]];
 
 /**
@@ -114,11 +120,89 @@ export function partition<T>(
  * @template T
  * @param {T[]} arr a sorted array
  * @param {T} target the target to split the given array at
- * @param {(a: T, b: T) => boolean} lt a function defining the `<` relation
+ * @param {Object=} options
+ * @param {(a: T, b: T) => boolean} options.lt a function defining the `<`
+ * relation
  * @returns {[T[], T[]]} Two arrays that divide the given array at the target
  */
 export function partitionLeft<T>(
     arr: T[],
     target: T,
-    lt: (a: T, b: T) => boolean,
+    options?: {lt?: (a: T, b: T) => boolean},
 ): [T[], T[]];
+
+/**
+ * Returns a new array where the given target has been inserted into the
+ * rightmost position of the given array that still maintains sorted order.
+ *
+ * If the `inPlace` option is given and set to `true`, the array is modified
+ * in place and the original array is returned.
+ *
+ * A comparison function, `lt`, can be provided and is equal to
+ * `(a, b) => a < b` by default.
+ *
+ * @exmaple
+ * ```javascript
+ * import {insort} from "@alg/bisect";
+ *
+ * const data = ["A", "BC", "DE", "FGH"];
+ * const options = {lt: (a, b) => a.length < b.length};
+ * console.log(insort(data, "XX", options));
+ * // ["A", "BC", "DE", "XX", "FGH"]
+ * ```
+ *
+ * @template T
+ * @param {T[]} arr a sorted array
+ * @param {T} target the target to insert
+ * @param {Object=} options
+ * @param {(a: T, b: T) => boolean} options.lt a function defining the `<`
+ * relation
+ * @param {boolean} options.inPlace If true, the array is modified in place.
+ * @returns {T[]} An array with the inserted element
+ */
+export function insort<T>(
+    arr: T[],
+    target: T,
+    options?: {
+        lt?: (a: T, b: T) => boolean,
+        inPlace?: boolean,
+    },
+): T[];
+
+/**
+ * Returns a new array where the given target has been inserted into the
+ * leftmost position of the given array that still maintains sorted order.
+ *
+ * If the `inPlace` option is given and set to `true`, the array is modified
+ * in place and the original array is returned.
+ *
+ * A comparison function, `lt`, can be provided and is equal to
+ * `(a, b) => a < b` by default.
+ *
+ * @exmaple
+ * ```javascript
+ * import {insortLeft} from "@alg/bisect";
+ *
+ * const data = ["A", "BC", "DE", "FGH"];
+ * const options = {lt: (a, b) => a.length < b.length};
+ * console.log(insortLeft(data, "XX", options));
+ * // ["A", "XX", "BC", "DE", "FGH"]
+ * ```
+ *
+ * @template T
+ * @param {T[]} arr a sorted array
+ * @param {T} target the target to insert
+ * @param {Object=} options
+ * @param {(a: T, b: T) => boolean} options.lt a function defining the `<`
+ * relation
+ * @param {boolean} options.inPlace If true, the array is modified in place.
+ * @returns {T[]} An array with the inserted element
+ */
+export function insortLeft<T>(
+    arr: T[],
+    target: T,
+    options?: {
+        lt?: (a: T, b: T) => boolean,
+        inPlace?: boolean,
+    },
+): T[];

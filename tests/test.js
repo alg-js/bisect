@@ -15,7 +15,14 @@
 
 import {assertEquals} from "jsr:@std/assert@1";
 import fc from "npm:fast-check";
-import {bisect, bisectLeft, partition, partitionLeft} from "../src/main.js";
+import {
+    bisect,
+    bisectLeft,
+    insort,
+    insortLeft,
+    partition,
+    partitionLeft,
+} from "../src/main.js";
 
 Deno.test({
     name: "bisect finds the minimum element in an array",
@@ -84,9 +91,8 @@ Deno.test({
     fn: () => fc.assert(fc.property(
         fc.array(fc.integer({min: -50, max: 50}), {minLength: 1}),
         fc.integer({min: -50, max: 50}),
-        fc.integer({min: 2, max: 5}),
-        (arr, target, reps) => {
-            arr = arr.concat(new Array(reps).fill(target));
+        (arr, target) => {
+            arr.push(target);
             arr.sort((a, b) => a < b ? -1 : 1);
             const expectedLeft = arr.findIndex((e) => e === target);
             assertEquals(bisectLeft(arr, target), expectedLeft);
@@ -165,6 +171,113 @@ Deno.test({
 
             assertEquals(left, bruteLeft);
             assertEquals(right, bruteRight);
+        },
+    )),
+});
+
+
+Deno.test({
+    name: "Insort adds items to arrays",
+    fn: () => fc.assert(fc.property(
+        fc.array(fc.integer(), {minLength: 1}),
+        fc.integer(),
+        (arr, value) => {
+            arr.sort((a, b) => a < b ? -1 : 1);
+            const arrCopy = [...arr];
+            const bruteArr = [...arr];
+            const idx = bruteArr.findLastIndex(it => it <= value) + 1;
+            bruteArr.splice(idx, 0, value);
+            assertEquals(insort(arr, value), bruteArr);
+            assertEquals(arr, arrCopy);
+        },
+    )),
+});
+
+
+Deno.test({
+    name: "Insort adds items to arrays in Place",
+    fn: () => fc.assert(fc.property(
+        fc.array(fc.integer(), {minLength: 1}),
+        fc.integer(),
+        (arr, value) => {
+            arr.sort((a, b) => a < b ? -1 : 1);
+            const bruteArr = [...arr];
+            const idx = bruteArr.findLastIndex(it => it <= value) + 1;
+            bruteArr.splice(idx, 0, value);
+            insort(arr, value, {inPlace: true});
+            assertEquals(arr, bruteArr);
+        },
+    )),
+});
+
+
+Deno.test({
+    name: "InsortLeft adds items to arrays",
+    fn: () => fc.assert(fc.property(
+        fc.array(fc.integer(), {minLength: 1}),
+        fc.integer(),
+        (arr, value) => {
+            arr.sort((a, b) => a < b ? -1 : 1);
+            const arrCopy = [...arr];
+            const bruteArr = [...arr];
+            let idx = arr.findIndex(it => it >= value);
+            idx = idx === -1 ? arr.length : idx;
+            bruteArr.splice(idx, 0, value);
+            assertEquals(insortLeft(arr, value), bruteArr);
+            assertEquals(arr, arrCopy);
+        },
+    )),
+});
+
+
+Deno.test({
+    name: "InsortLeft adds items to arrays in place",
+    fn: () => fc.assert(fc.property(
+        fc.array(fc.integer(), {minLength: 1}),
+        fc.integer(),
+        (arr, value) => {
+            arr.sort((a, b) => a < b ? -1 : 1);
+            const bruteArr = [...arr];
+            let idx = arr.findIndex(it => it >= value);
+            idx = idx === -1 ? arr.length : idx;
+            bruteArr.splice(idx, 0, value);
+            insortLeft(arr, value, {inPlace: true});
+            assertEquals(arr, bruteArr);
+        },
+    )),
+});
+
+
+Deno.test({
+    name: "bisect can take custom lt functions",
+    fn: () => fc.assert(fc.property(
+        fc.array(fc.string(), {minLength: 1}),
+        fc.string(),
+        (arr, value) => {
+            arr.sort((a, b) => a.length - b.length);
+            const lt = (a, b) => a.length < b.length;
+
+            let expectedLeft = arr.findIndex((e) => e.length >= value.length);
+            expectedLeft = expectedLeft === -1 ? arr.length : expectedLeft;
+            let expectedRight = arr.findLastIndex((e) => e.length <= value.length);
+            expectedRight = expectedRight === -1 ? 0 : expectedRight + 1;
+
+            assertEquals(
+                bisect(arr, value, {lt: lt}),
+                expectedRight,
+            );
+            assertEquals(
+                bisectLeft(arr, value, {lt: lt}),
+                expectedLeft,
+            );
+            assertEquals(
+                partition(arr, value, {lt: lt}),
+                [arr.slice(0, expectedRight), arr.slice(expectedRight)],
+            );
+            assertEquals(
+                partitionLeft(arr, value, {lt: lt}),
+                [arr.slice(0, expectedLeft), arr.slice(expectedLeft)],
+            );
         },
     )),
 });

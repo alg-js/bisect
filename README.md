@@ -38,8 +38,17 @@ vlt install jsr:@alg/bisect
 
 ## Example
 
-The `bisect` and `bisectLeft` functions find target values in an array, the
-`partition` and `partitionLeft` functions split an array by a target value.
+There are three main functions in this library, each with a left and right
+variant:
+
+- `bisect`: finds the indices that given target values need to be inserted to
+  preserve sorted order
+- `parition`: splits arrays by a given target value
+- `insort`: inserts a given value into an array while maintaining sorted order
+
+These functions are described more below.
+
+## `bisect`
 
 `bisect` returns the largest index in a sorted array at which the target value
 can be inserted while preserving sorted order.
@@ -62,9 +71,9 @@ items.
 import {bisect} from "@alg/bisect";
 
 const strings = ["a", "abc", "abcd"];
-const lt = (a, b) => a.length < b.length
+const options = {lt: (a, b) => a.length < b.length}
 
-console.log(bisect(strings, "ab", lt));  // 1
+console.log(bisect(strings, "ab", options));  // 1
 ```
 
 `bisectLeft` finds the smallest index at which the target could be inserted in
@@ -78,6 +87,8 @@ const arr = [-1, 2, 2, 4, 5];
 console.log(bisect(arr, 2));  // 3
 console.log(bisectLeft(arr, 2));  // 1
 ```
+
+## `partition`
 
 `partition` splits a given array into two. Where all the elements in the first
 array are less than or equals to the given target, and all elements in the
@@ -95,5 +106,37 @@ console.log(partition(data, 3));  // [[1, 2, 3, 3], [4, 5]]
 console.log(partitionLeft(data, 3));  // [[1, 2], [3, 3, 4, 5]];
 ```
 
-As with `bisect` and `bisectLeft`, a custom comparison operator can be passed
-as an optional third argument.
+As with `bisect` and `bisectLeft`, a custom comparison operator can be passed as
+an optional argument.
+
+## `insort`
+
+`insort` returns a new array with a given value inserted into the rightmost
+location that preserves sorted order. `insortLeft` does the same but at the
+leftmost location.
+
+```javascript
+import {insort, insortLeft} from "@alg/bisect";
+
+const data = ["A", "BC", "DE", "FGH"];
+const options = {lt: (a, b) => a.length < b.length};
+
+console.log(insort(data, "XX", options));  // ["A", "BC", "DE", "XX", "FGH"]
+console.log(insortLeft(data, "XX", options));  // ["A", "XX", "BC", "DE", "FGH"]
+```
+
+By default, `insort` and `insortLeft` return a new array. To insert values in
+place, the `inPlace` option can be provided:
+
+```javascript
+import {insort} from "@alg/bisect";
+
+const data = ["A", "BC", "DE", "FGH"];
+const options = {
+    lt: (a, b) => a.length < b.length,
+    inPlace: true,
+};
+
+console.log(insort(data, "XX", options));  // ["A", "BC", "DE", "XX", "FGH"]
+console.log(data);  // ["A", "BC", "DE", "XX", "FGH"]
+```

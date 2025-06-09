@@ -1,7 +1,7 @@
 # @alg/bisect
 
 [![JSR](https://jsr.io/badges/@alg/bisect)](https://jsr.io/@alg/bisect)
-[![License](https://img.shields.io/badge/Apache--2.0-green?label=license)](https://github.com/alg-js/bisect/blob/main/LICENSE)
+[![License](https://img.shields.io/badge/Apache--2.0-green?label=license)](https://codeberg.org/algjs/bisect/src/branch/main/LICENSE)
 
 A generic binary search implementation.
 

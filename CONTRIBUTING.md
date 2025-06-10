@@ -1,7 +1,7 @@
 # Contributing
 
 Issues and pull requests are welcome
-on [Codeberg](https://codeberg.org/algjs/bisect/).
+on [Codeberg](https://codeberg.org/algjs/bisect).
 
 If you would like a new feature to be added to this library, please create an
 issue for it first so the community has time to discuss the proposed feature.
